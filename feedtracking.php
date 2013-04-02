@@ -140,7 +140,8 @@ class Feedtracking extends \Podlove\Modules\Base {
 
 		$t->setUserAgent( $_SERVER['HTTP_USER_AGENT'] );
 
-		$httpurl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		//$httpurl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$httpurl = $this->full_url();
 		$t->setUrl( $url = $httpurl );
 		$t->setUrlReferrer( $url = $_SERVER['HTTP_REFERER'] );
 
@@ -169,6 +170,15 @@ class Feedtracking extends \Podlove\Modules\Base {
 
 		// Track page view
 		$tracker->trackPageview($page, $session, $visitor);
+	}
+
+	public function full_url()
+	{
+	    $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
+	    $sp = strtolower($_SERVER["SERVER_PROTOCOL"]);
+	    $protocol = substr($sp, 0, strpos($sp, "/")) . $s;
+	    $port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
+	    return $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . $_SERVER['REQUEST_URI'];
 	}
 
 }
